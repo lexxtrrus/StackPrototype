@@ -302,9 +302,15 @@ public class GameManager : SingletonGameobject<GameManager>
             Destroy(placementFigures.GetChild(i).gameObject);
         }
 
+        
         for (int i = 0; i < fallingCubes.Count - 1; i++)
         {
             Destroy(fallingCubes[i]);
+        }
+
+        foreach (var item in fallingCubes)
+        {
+            if(item != null) Destroy(item);
         }
 
         fallingCubes.Clear();

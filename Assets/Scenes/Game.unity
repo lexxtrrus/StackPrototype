@@ -551,7 +551,8 @@ MonoBehaviour:
   cubes:
   - {fileID: 546764741}
   - {fileID: 943303497}
-  fallingCubes: []
+  fallingCubes:
+  - {fileID: 0}
   currentYPosition: 0
   speed: 2
   currentGradientStep: 0
@@ -674,7 +675,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 3.0092666e-36, y: 1.009742e-28, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 8.67e-43, y: -5.9292376e+34, z: 4.5904e-41, w: -5.9288177e+34}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0

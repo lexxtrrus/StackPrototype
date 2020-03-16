@@ -168,7 +168,6 @@ public class GameManager : SingletonGameobject<GameManager>
                 {
                     current.position = new Vector3(last.position.x, current.position.y, last.position.z);
                     cubes.Add(currentFigure.transform);
-                    //currentFigure.AddComponent<CheckReset>();
                     OnLevelUp?.Invoke();
                     CalculateStartPositions();
                     InstantiateFigure();
@@ -216,7 +215,6 @@ public class GameManager : SingletonGameobject<GameManager>
                     OnLevelUp?.Invoke();
                     CalculateStartPositions();
                     InstantiateFigure();
-                    //currentFigure.AddComponent<CheckReset>();
 
                     return;
                 }
@@ -257,7 +255,6 @@ public class GameManager : SingletonGameobject<GameManager>
             current.localScale = new Vector3(scaleX, 1f, scaleZ);
 
             GameObject go = Instantiate(currentFigure, new Vector3(100f, 0f, 0f), Quaternion.identity);
-            //go.AddComponent<CheckReset>();
             go.transform.localScale = new Vector3(fallScaleX, 1f, fallScaleZ);
             go.transform.position = new Vector3(newFallX, current.position.y, newFallZ);
             Rigidbody rig = go.GetComponent<Rigidbody>();
@@ -363,9 +360,7 @@ public class GameManager : SingletonGameobject<GameManager>
 
     public void RemoveThisFallingFigure(GameObject obj)
     {
-        //fallingCubes.Remove(obj);
-        //fallingCubes.IndexOf(obj);
-        fallingCubes.Remove(obj);    
+        fallingCubes.RemoveAt(fallingCubes.IndexOf(obj));   
     }
 
     private IEnumerator MoveFigureRoute(Transform go, Vector3 from, Vector3 to, float time)

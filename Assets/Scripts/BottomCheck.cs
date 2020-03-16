@@ -6,7 +6,7 @@ public class BottomCheck : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        GameManager.Instance.RemoveThisFallingFigure(other.gameObject);
+        GameManager.Instance.RemoveThisFallingFigure(gameObject);
         Destroy(this.gameObject);
     }
 }

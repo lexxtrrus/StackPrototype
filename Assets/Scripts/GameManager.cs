@@ -5,24 +5,27 @@ using UnityEngine;
 
 public class GameManager : SingletonGameobject<GameManager>
 {
-    [SerializeField] private List<Vector3> startPositions = new List<Vector3>(8);
-
+    [Header("Set objects")]
     [SerializeField] private Transform startFigure;
     [SerializeField] private Transform placementFigures;
-
     [SerializeField] private GameObject cubePrefab;
+
+    [Header("Lists of cubes")]
     [SerializeField] private List<Transform> cubes = new List<Transform>();
     [SerializeField] private List<GameObject> fallingCubes = new List<GameObject>();
 
-    [SerializeField] private float currentYPosition = 1f;
+    [Header("Speed of prefab")]
     [SerializeField] private float speed = 2f;
 
+    [Header("Gradient")]
     [SerializeField] private float currentGradientStep = 0f;
-    [SerializeField] private int placedFigures = 0;
-
     [SerializeField] private Gradient gradient = new Gradient();
-    [SerializeField] private GameObject currentFigure;
 
+
+    [SerializeField] private List<Vector3> startPositions;
+
+    private GameObject currentFigure;    
+    private float currentYPosition = 0f;
     private IEnumerator movementCoroutine;
     private int lastRandom = 0;
 
@@ -51,7 +54,6 @@ public class GameManager : SingletonGameobject<GameManager>
     public event Action OnGameResetFromLastPoint;
     public event Action OnGameFailed;
     public event Action OnFinalResultShowed;
-
     public Action OnLevelUp;
 
     private void Awake()
@@ -100,6 +102,11 @@ public class GameManager : SingletonGameobject<GameManager>
         currentFigure.transform.position = from;
         movementCoroutine = MoveFigureRoute(currentFigure.transform, from, to, speed);
         StartCoroutine(movementCoroutine);
+    }
+
+    private void Reset()
+    {
+        startPositions = new List<Vector3>(8);
     }
 
     private void ResetGameStartPlay()

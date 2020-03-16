@@ -535,15 +535,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e619fc2a9b56bab4b8dc6ffa6ec40a22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startPositions:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 0, z: 0}
   startFigure: {fileID: 1324937501}
   placementFigures: {fileID: 112556653}
   cubePrefab: {fileID: 1170944254662925550, guid: 93d4b2f5b3ca10b4e937ab065535dc66,
@@ -551,12 +542,9 @@ MonoBehaviour:
   cubes:
   - {fileID: 546764741}
   - {fileID: 943303497}
-  fallingCubes:
-  - {fileID: 0}
-  currentYPosition: 0
+  fallingCubes: []
   speed: 2
   currentGradientStep: 0
-  placedFigures: 0
   gradient:
     serializedVersion: 2
     key0: {r: 1, g: 1, b: 1, a: 1}
@@ -586,7 +574,15 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 2
     m_NumAlphaKeys: 2
-  currentFigure: {fileID: 0}
+  startPositions:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
 --- !u!4 &622906818
 Transform:
   m_ObjectHideFlags: 0

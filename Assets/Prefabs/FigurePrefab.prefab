@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 1170944254662925545}
   - component: {fileID: -4332950914730545916}
   - component: {fileID: 1448079135922685419}
-  - component: {fileID: 4507186815037560570}
   m_Layer: 0
   m_Name: FigurePrefab
   m_TagString: Untagged
@@ -124,21 +123,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0c5699fbca1ab74387f7f3dc37bfeef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!220 &4507186815037560570
-LightProbeGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1170944254662925550}
-  m_Enabled: 1
-  m_SourcePositions:
-  - {x: 1, y: 1, z: 1}
-  - {x: 1, y: 1, z: -1}
-  - {x: 1, y: -1, z: 1}
-  - {x: 1, y: -1, z: -1}
-  - {x: -1, y: 1, z: 1}
-  - {x: -1, y: 1, z: -1}
-  - {x: -1, y: -1, z: 1}
-  - {x: -1, y: -1, z: -1}
-  m_Dering: 1

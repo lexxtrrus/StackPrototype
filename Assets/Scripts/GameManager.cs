@@ -22,8 +22,7 @@ public class GameManager : SingletonGameobject<GameManager>
     [SerializeField] private Gradient gradient = new Gradient();
 
 
-    [SerializeField] private List<Vector3> startPositions;
-
+    private List<Vector3> startPositions;
     private GameObject currentFigure;    
     private float currentYPosition = 0f;
     private IEnumerator movementCoroutine;
@@ -67,6 +66,12 @@ public class GameManager : SingletonGameobject<GameManager>
         defeatState = new DefeatState(this, stateMachine);
         stateMachine.Initialize(waitingState);
 
+        startPositions = new List<Vector3>(8);
+        for (int i = 0; i < startPositions.Capacity; i++)
+        {
+            startPositions.Add(Vector3.zero);
+        }
+
         CalculateStartPositions();
         lastRandom = UnityEngine.Random.Range(0, 3);
     }
@@ -102,11 +107,6 @@ public class GameManager : SingletonGameobject<GameManager>
         currentFigure.transform.position = from;
         movementCoroutine = MoveFigureRoute(currentFigure.transform, from, to, speed);
         StartCoroutine(movementCoroutine);
-    }
-
-    private void Reset()
-    {
-        startPositions = new List<Vector3>(8);
     }
 
     private void ResetGameStartPlay()

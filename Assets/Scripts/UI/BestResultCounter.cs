@@ -13,7 +13,16 @@ public class BestResultCounter : MonoBehaviour
     {
         Profile.BestResult = currentResultNumber;
         GameManager.Instance.OnFigurePlaced += LevelUp;
+        GameManager.Instance.OnGameResetFromBegining += ResetCounter;
     }
+
+    private void ResetCounter()
+    {
+        currentResultNumber = 0;
+        IsFirstFigure = true;
+    }
+
+    
 
     private void LevelUp()
     {

@@ -32,5 +32,6 @@ public class CurrentResultCounter : MonoBehaviour
         IsFirstFigure = true;
         currentResultNumber = 0;
         currentResult.text = $"{currentResultNumber.ToString()}";
+        currentResult.GetComponent<Text>().enabled = false;
     }
 }

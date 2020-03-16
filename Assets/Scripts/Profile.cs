@@ -53,7 +53,6 @@ public class Profile : MonoBehaviour
         {
             if(value > playerData.bestResult)
             {
-                Debug.Log("yep");
                 playerData.bestResult = value;
             }
 

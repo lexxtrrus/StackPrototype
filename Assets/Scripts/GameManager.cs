@@ -73,7 +73,7 @@ public class GameManager : SingletonGameobject<GameManager>
         }
 
         CalculateStartPositions();
-        lastRandom = UnityEngine.Random.Range(0, 3);
+        lastRandom = UnityEngine.Random.Range(0, 4);
     }
 
     private void OnEnable()
@@ -278,13 +278,13 @@ public class GameManager : SingletonGameobject<GameManager>
 
     private int GetRandomIndex()
     {
-        int random = UnityEngine.Random.Range(0, 3);
+        int random = UnityEngine.Random.Range(0, 4);
 
         if (lastRandom == random)
         {
             while (lastRandom == random)
             {
-                random = UnityEngine.Random.Range(0, 3);
+                random = UnityEngine.Random.Range(0, 4);
             }
         }
 

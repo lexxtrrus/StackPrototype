@@ -21,12 +21,16 @@ public class GameManager : SingletonGameobject<GameManager>
     [SerializeField] private float currentGradientStep = 0f;
     [SerializeField] private Gradient gradient = new Gradient();
 
+    private CalculateTransoftmPrefab calculateTransoftmPrefab;
 
     private List<Vector3> startPositions;
     private GameObject currentFigure;    
     private float currentYPosition = 0f;
     private IEnumerator movementCoroutine;
     private int lastRandom = 0;
+
+    private Transform newBottomPosition;
+    private Transform newFallingPosition;
 
     #region States
     private StateMachine stateMachine;
@@ -72,8 +76,15 @@ public class GameManager : SingletonGameobject<GameManager>
             startPositions.Add(Vector3.zero);
         }
 
+        calculateTransoftmPrefab = new CalculateTransoftmPrefab();
+
         CalculateStartPositions();
         lastRandom = UnityEngine.Random.Range(0, 4);
+
+        GameObject temp = new GameObject();
+        newBottomPosition = temp.GetComponent<Transform>();
+        GameObject temp1 = new GameObject();
+        newFallingPosition = temp1.GetComponent<Transform>();
     }
 
     private void OnEnable()
@@ -126,7 +137,9 @@ public class GameManager : SingletonGameobject<GameManager>
     public void CheckMatches()
     {
         StopCoroutine(movementCoroutine);
+        calculateTransoftmPrefab.Init(cubes[cubes.Count - 1], currentFigure.transform);
 
+        /*
         Transform last = cubes[cubes.Count - 1];
         var zScaleLast = last.localScale.z * 0.5f;
         var xScaleLast = last.localScale.x * 0.5f;
@@ -135,6 +148,8 @@ public class GameManager : SingletonGameobject<GameManager>
         var zScaleCur = current.localScale.z * 0.5f;
         var xScaleCur = current.localScale.x * 0.5f;
 
+
+
         float possibleZCover = zScaleLast + zScaleCur - 0.1f;
         float possibleXCover = xScaleLast + xScaleCur - 0.1f;
 
@@ -142,128 +157,43 @@ public class GameManager : SingletonGameobject<GameManager>
         var x  = Mathf.Abs(last.position.x - current.position.x);
 
         bool zCover = z < possibleZCover;
-        bool xCover = x < possibleXCover;
+        bool xCover = x < possibleXCover;*/
 
-        if(!zCover || !xCover)
+        if (!calculateTransoftmPrefab.IsPlayerMissed())
         {
-            stateMachine.ChangeState(defeatState);
-            Rigidbody rig = currentFigure.GetComponent<Rigidbody>();
-            rig.isKinematic = false;
-            rig.useGravity = true;
-            OnGameFailed?.Invoke();
+            GameOver();
         }
-
-        if(zCover && xCover)
+        else
         {
             OnFigurePlaced?.Invoke();
 
-            //placement figure
-            float scaleZ = 0f;
-            float scaleX = 0f;
-            float newZ = 0f;
-            float newX = 0f;
-
-            //falling figure
-            float fallScaleZ = 0f;
-            float fallScaleX = 0f;
-            float newFallZ = 0f;
-            float newFallX = 0f;
-
-            if (z > 0f)
+            if(calculateTransoftmPrefab.IsPerfectPlacement())
             {
-                if(z < 0.1f)
-                {
-                    current.position = new Vector3(last.position.x, current.position.y, last.position.z);
-                    cubes.Add(currentFigure.transform);
-                    OnLevelUp?.Invoke();
-                    CalculateStartPositions();
-                    InstantiateFigure();
+                currentFigure.transform.position = new Vector3(cubes[cubes.Count - 1].position.x, currentFigure.transform.position.y, cubes[cubes.Count - 1].position.z);
+                cubes.Add(currentFigure.transform);
+                OnLevelUp?.Invoke();
+                CalculateStartPositions();
+                InstantiateFigure();
+                return;
+            }            
 
-                    return;
-                }
-
-                if(last.position.z > current.position.z)
-                {
-                    float northC = current.position.z + zScaleCur;
-                    float southL = last.position.z - zScaleLast;
-
-                    scaleZ = northC - southL;
-                    newZ = southL + scaleZ * 0.5f;
-                    scaleX = current.localScale.x;
-                    newX = current.position.x;
-
-                    fallScaleZ = current.localScale.z - scaleZ;
-                    newFallZ = newZ - scaleZ * 0.5f - fallScaleZ * 0.5f;
-                    fallScaleX = current.localScale.x;
-                    newFallX = current.position.x;
-                }
-                else
-                {
-                    float northL = last.position.z + zScaleLast;
-                    float southC = current.position.z - zScaleCur;
-
-                    scaleZ = northL - southC;
-                    newZ = southC + scaleZ * 0.5f;
-                    scaleX = current.localScale.x;
-                    newX = current.position.x;
-
-                    fallScaleZ = current.localScale.z - scaleZ;
-                    newFallZ = newZ + scaleZ * 0.5f + fallScaleZ * 0.5f;
-                    fallScaleX = current.localScale.x;
-                    newFallX = current.position.x;
-                }
+            if (lastRandom == 0 || lastRandom == 1)
+            {
+                newBottomPosition = calculateTransoftmPrefab.CalculateZAxisPlacementPosition();
+                newFallingPosition = calculateTransoftmPrefab.CalculateZAxisFallingPosition();
             }
-            if (x > 0f)
+            else
             {
-                if (x < 0.1f)
-                {
-                    current.position = new Vector3(last.position.x, current.position.y, last.position.z);
-                    cubes.Add(currentFigure.transform);
-                    OnLevelUp?.Invoke();
-                    CalculateStartPositions();
-                    InstantiateFigure();
-
-                    return;
-                }
-
-                if (last.position.x > current.position.x)
-                {
-                    float eastC = current.position.x + xScaleCur;
-                    float westL = last.position.x - xScaleLast;
-
-                    scaleX = eastC - westL;
-                    newX = westL + scaleX * 0.5f;
-                    scaleZ = current.localScale.z;
-                    newZ = current.position.z;
-
-                    fallScaleZ = current.localScale.z;
-                    newFallZ = current.position.z;
-                    fallScaleX = current.localScale.x - scaleX;
-                    newFallX = newX - scaleX * 0.5f - fallScaleX * 0.5f;
-                }
-                else
-                {
-                    float eastL = last.position.x + xScaleLast;
-                    float westC = current.position.x - xScaleCur;
-
-                    scaleX = eastL - westC;
-                    newX = westC + scaleX * 0.5f;
-                    scaleZ = current.localScale.z;
-                    newZ = current.position.z;
-
-                    fallScaleZ = current.localScale.z;
-                    newFallZ = current.position.z;
-                    fallScaleX = current.localScale.x - scaleX;
-                    newFallX = newX + scaleX * 0.5f + fallScaleX * 0.5f;
-                }
+                newBottomPosition = calculateTransoftmPrefab.CalculateXAxisPlacementPositions();
+                newFallingPosition = calculateTransoftmPrefab.CalculateXAxisPlacementPositions();
             }
 
-            current.position = new Vector3(newX, current.position.y, newZ);
-            current.localScale = new Vector3(scaleX, 1f, scaleZ);
+            currentFigure.transform.position = new Vector3(newBottomPosition.transform.position.x, currentFigure.transform.position.y, newBottomPosition.transform.position.z);
+            currentFigure.transform.localScale = new Vector3(newBottomPosition.transform.localScale.x, 1f, newBottomPosition.transform.localScale.z);
 
             GameObject go = Instantiate(currentFigure, new Vector3(100f, 0f, 0f), Quaternion.identity);
-            go.transform.localScale = new Vector3(fallScaleX, 1f, fallScaleZ);
-            go.transform.position = new Vector3(newFallX, current.position.y, newFallZ);
+            go.transform.localScale = new Vector3(newFallingPosition.transform.position.x, 1f, newFallingPosition.transform.position.z);
+            go.transform.position = new Vector3(newFallingPosition.transform.localScale.x, currentFigure.transform.position.y, newFallingPosition.transform.localScale.z);
             Rigidbody rig = go.GetComponent<Rigidbody>();
             rig.isKinematic = false;
             rig.useGravity = true;
@@ -274,6 +204,15 @@ public class GameManager : SingletonGameobject<GameManager>
             CalculateStartPositions();
             InstantiateFigure();
         }
+    }
+
+    private void GameOver()
+    {
+        stateMachine.ChangeState(defeatState);
+        Rigidbody rig = currentFigure.GetComponent<Rigidbody>();
+        rig.isKinematic = false;
+        rig.useGravity = true;
+        OnGameFailed?.Invoke();
     }
 
     private int GetRandomIndex()

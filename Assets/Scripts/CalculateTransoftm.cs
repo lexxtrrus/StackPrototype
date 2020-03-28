@@ -1,0 +1,163 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+
+public class CalculateTransoftms : MonoBehaviour
+{
+    private Transform bottomFigure;
+    private Transform upFigure;
+
+    private Transform fallingFigure;
+
+    //placement figure
+    private float bottomEdgePosition = 0f;
+    private float upEdgePosition = 0f;
+    private float newZ = 0f;
+    private float newX = 0f;
+
+    //falling figure
+    private float fallScaleZ = 0f;
+    private float fallScaleX = 0f;
+    private float newFallZ = 0f;
+    private float newFallX = 0f;
+
+    private float zCovered = 0;
+    private float xCovered = 0;
+
+    public Transform CreateTempTransform()
+    {
+        GameObject temp = new GameObject("temp");
+        fallingFigure = temp.GetComponent<Transform>();
+        return fallingFigure;
+    }
+
+    public void Init(Transform bottom, Transform placedFigure)
+    {        
+        bottomFigure = bottom;
+        upFigure = placedFigure;
+    }
+
+    public bool IsPlayerMissed()
+    {
+        var zScaleBottom = bottomFigure.localScale.z * 0.5f;
+        var xScaleBottom = bottomFigure.localScale.x * 0.5f;
+
+        var zScaleUp = upFigure.localScale.z * 0.5f;
+        var xScaleUp = upFigure.localScale.x * 0.5f;
+
+        float possibleZCover = zScaleBottom + zScaleUp - 0.1f;
+        float possibleXCover = xScaleBottom + xScaleUp - 0.1f;
+
+        zCovered = Mathf.Abs(bottomFigure.position.z - upFigure.position.z);
+        xCovered = Mathf.Abs(bottomFigure.position.x - upFigure.position.x);
+
+        bool isZAxisCover = zCovered < possibleZCover;
+        bool isXAxisCover = xCovered < possibleXCover;
+
+        if(!isZAxisCover || !isXAxisCover)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool IsPerfectPlacement()
+    {
+        if(Mathf.Abs(zCovered) < 0.1f && Mathf.Abs(xCovered) < 0.1f)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public Transform CalculateZAxisPlacementPosition()
+    {
+        float multiplicationFactor = 0f;
+
+        if (bottomFigure.position.z > upFigure.position.z)
+        {
+            multiplicationFactor = 1f;
+        }
+        else
+        {
+            multiplicationFactor = -1f;
+        }
+
+        upEdgePosition = upFigure.position.z + upFigure.localScale.z * 0.5f * multiplicationFactor; 
+        bottomEdgePosition = bottomFigure.position.z - bottomFigure.localScale.z * 0.5f * multiplicationFactor; 
+
+        zCovered = Mathf.Abs(upEdgePosition - bottomEdgePosition);
+        
+        var pos = upFigure.position;
+        var scale = upFigure.localScale;
+
+        float scaleFallingFigure = scale.z;
+
+        pos.z = upEdgePosition - multiplicationFactor * zCovered * 0.5f;
+        upFigure.position = pos;
+
+        scale.z = zCovered;
+        upFigure.localScale = scale;
+
+        pos.z = bottomEdgePosition - multiplicationFactor * Mathf.Abs(scaleFallingFigure - zCovered) * 0.5f;
+        fallingFigure.position = pos;
+
+        scale.z = Mathf.Abs(scaleFallingFigure - zCovered);
+        fallingFigure.localScale = scale;
+        
+        return upFigure;
+    }
+
+    public Transform CalculateZAxisFallingPosition()
+    {
+        return fallingFigure;
+    }
+
+    public Transform CalculateXAxisPlacementPositions()
+    {
+        float multiplicationFactor = 0f;
+
+        if (bottomFigure.position.x > upFigure.position.x)
+        {
+            multiplicationFactor = 1f;
+        }
+        else
+        {
+            multiplicationFactor = -1f;
+        }
+
+        upEdgePosition = upFigure.position.x + upFigure.localScale.x * 0.5f * multiplicationFactor;
+        bottomEdgePosition = bottomFigure.position.x - bottomFigure.localScale.x * 0.5f * multiplicationFactor;
+
+        xCovered = Mathf.Abs(upEdgePosition - bottomEdgePosition);
+
+        var pos = upFigure.position;
+        var scale = upFigure.localScale;
+
+        float scaleFallingFigure = scale.x;
+
+        pos.x = upEdgePosition - multiplicationFactor * xCovered * 0.5f;
+        upFigure.position = pos;
+
+        scale.x = xCovered;
+        upFigure.localScale = scale;
+
+        pos.x = bottomEdgePosition - multiplicationFactor * Mathf.Abs(scaleFallingFigure - xCovered) * 0.5f;
+        fallingFigure.position = pos;
+
+        scale.x = Mathf.Abs(scaleFallingFigure - xCovered);
+        fallingFigure.localScale = scale;
+
+        return upFigure;
+    }
+
+    public Transform CalculateXAxisFallingPosition()
+    {
+        return fallingFigure;
+    }
+}
+

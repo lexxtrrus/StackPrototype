@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class CurrentResultCounter : MonoBehaviour
 {
-    [SerializeField] private Text currentResult;
+    [SerializeField] private TextMeshProUGUI currentResult;
     private int currentResultNumber = 0;
     private bool IsFirstFigure = true;
 
@@ -22,7 +20,7 @@ public class CurrentResultCounter : MonoBehaviour
 
         if(IsFirstFigure)
         {
-            currentResult.GetComponent<Text>().enabled = true;
+            currentResult.enabled = true;
             IsFirstFigure = false;
         }
     }
@@ -32,6 +30,6 @@ public class CurrentResultCounter : MonoBehaviour
         IsFirstFigure = true;
         currentResultNumber = 0;
         currentResult.text = $"{currentResultNumber.ToString()}";
-        currentResult.GetComponent<Text>().enabled = false;
+        currentResult.enabled = false;
     }
 }

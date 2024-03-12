@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BestResultCounter : MonoBehaviour
 {
-    [SerializeField] private Text bestResult;
+    [SerializeField] private TextMeshProUGUI bestResult;
     private int currentResultNumber = 0;
     private bool IsFirstFigure = true;
 
@@ -32,7 +33,7 @@ public class BestResultCounter : MonoBehaviour
 
         if (IsFirstFigure)
         {
-            bestResult.GetComponent<Text>().enabled = true;
+            bestResult.enabled = true;
             IsFirstFigure = false;
         }
     }

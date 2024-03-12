@@ -1,12 +1,12 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class StartGameHideElements : MonoBehaviour
 {
-    [SerializeField] private Text stackLabel;
-    [SerializeField] private Text tapToPlayLabel;
+    [SerializeField] private TextMeshProUGUI stackLabel;
+    [SerializeField] private TextMeshProUGUI tapToPlayLabel;
 
     private void Start()
     {

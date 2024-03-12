@@ -104,9 +104,9 @@ public class GameManager : SingletonGameobject<GameManager>
         OnStartMenuShowed?.Invoke();
         gradient = ColorInterpolation.Instance.GetPalitre();
         cubes[0].GetComponent<Renderer>().material.color = gradient.Evaluate(currentGradientStep);
-        currentGradientStep += 0.1f;
+        currentGradientStep += 0.025f;
         cubes[1].GetComponent<Renderer>().material.color = gradient.Evaluate(currentGradientStep);
-        currentGradientStep += 0.1f;
+        currentGradientStep += 0.025f;
     }   
 
     private void Update()
@@ -133,7 +133,7 @@ public class GameManager : SingletonGameobject<GameManager>
         gradient = ColorInterpolation.Instance.GetPalitre();
 
         cubes[0].GetComponent<Renderer>().material.color = gradient.Evaluate(currentGradientStep);
-        currentGradientStep += 0.1f;
+        currentGradientStep += 0.025f;
         cubes[1].GetComponent<Renderer>().material.color = gradient.Evaluate(currentGradientStep);
 
         stateMachine.Initialize(gameState);
@@ -268,7 +268,7 @@ public class GameManager : SingletonGameobject<GameManager>
         GameObject figure = Instantiate(cubePrefab);
         figure.transform.SetParent(placementFigures);
         figure.GetComponent<Renderer>().material.color = gradient.Evaluate(currentGradientStep);
-        currentGradientStep += 0.1f;
+        currentGradientStep += 0.025f;
 
         if(currentGradientStep >= 0.95f)
         {
@@ -313,7 +313,7 @@ public class GameManager : SingletonGameobject<GameManager>
 
     public void RemoveThisFallingFigure(GameObject obj)
     {
-        fallingCubes.RemoveAt(fallingCubes.IndexOf(obj));   
+        fallingCubes.Remove(obj);   
     }
 
     private IEnumerator MoveFigureRoute(Transform go, Vector3 from, Vector3 to, float time)

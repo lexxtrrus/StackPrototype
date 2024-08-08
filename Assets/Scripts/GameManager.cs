@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameManager : SingletonGameobject<GameManager>
@@ -20,6 +21,12 @@ public class GameManager : SingletonGameobject<GameManager>
     [Header("Gradient")]
     [SerializeField] private float currentGradientStep = 0f;
     [SerializeField] private Gradient gradient = new Gradient();
+
+    private float GradientStep
+    {
+        get => currentGradientStep;
+        set => currentGradientStep = value;
+    }
 
     [SerializeField] private Transform tempTransforms;
 
@@ -53,12 +60,9 @@ public class GameManager : SingletonGameobject<GameManager>
 
     public event Action OnStartMenuShowed;
     public Action OnGameStart;
-    public event Action OnGameState;
     public event Action OnFigurePlaced;
     public Action OnGameResetFromBegining;
-    public event Action OnGameResetFromLastPoint;
     public event Action OnGameFailed;
-    public event Action OnFinalResultShowed;
     public Action OnLevelUp;
 
     private void Awake()
@@ -103,10 +107,9 @@ public class GameManager : SingletonGameobject<GameManager>
     {
         OnStartMenuShowed?.Invoke();
         gradient = ColorInterpolation.Instance.GetPalitre();
-        cubes[0].GetComponent<Renderer>().material.color = gradient.Evaluate(currentGradientStep);
-        currentGradientStep += 0.025f;
-        cubes[1].GetComponent<Renderer>().material.color = gradient.Evaluate(currentGradientStep);
-        currentGradientStep += 0.025f;
+        
+        ChangeColorOnMesh(cubes[0].GetComponent<MeshFilter>().mesh, gradient.Evaluate(GradientStep), gradient.Evaluate(GradientStep += 0.25f));
+        ChangeColorOnMesh(cubes[1].GetComponent<MeshFilter>().mesh, gradient.Evaluate(GradientStep), gradient.Evaluate(GradientStep += 0.25f));
     }   
 
     private void Update()
@@ -132,9 +135,8 @@ public class GameManager : SingletonGameobject<GameManager>
 
         gradient = ColorInterpolation.Instance.GetPalitre();
 
-        cubes[0].GetComponent<Renderer>().material.color = gradient.Evaluate(currentGradientStep);
-        currentGradientStep += 0.025f;
-        cubes[1].GetComponent<Renderer>().material.color = gradient.Evaluate(currentGradientStep);
+        ChangeColorOnMesh(cubes[0].GetComponent<MeshFilter>().mesh, gradient.Evaluate(currentGradientStep), gradient.Evaluate(GradientStep += 0.1f));
+        ChangeColorOnMesh(cubes[1].GetComponent<MeshFilter>().mesh, gradient.Evaluate(currentGradientStep), gradient.Evaluate(GradientStep += 0.1f));
 
         stateMachine.Initialize(gameState);
     }
@@ -153,11 +155,8 @@ public class GameManager : SingletonGameobject<GameManager>
         {
             OnFigurePlaced?.Invoke();
             
-            
-            
             if(calculateTransoftm.IsPerfectPlacement())
             {
-                Debug.Log("Perfect");
                 currentFigure.transform.position = new Vector3(cubes[cubes.Count - 1].position.x, currentFigure.transform.position.y, cubes[cubes.Count - 1].position.z);
                 cubes.Add(currentFigure.transform);
                 OnLevelUp?.Invoke();
@@ -255,9 +254,9 @@ public class GameManager : SingletonGameobject<GameManager>
             Destroy(fallingCubes[i]);
         }
 
-        foreach (var item in fallingCubes)
+        foreach (var item in fallingCubes.Where(item => item != null))
         {
-            if(item != null) Destroy(item);
+            Destroy(item);
         }
 
         fallingCubes.Clear();
@@ -265,16 +264,15 @@ public class GameManager : SingletonGameobject<GameManager>
 
     private GameObject GetFigurePrefab()
     {
-        GameObject figure = Instantiate(cubePrefab);
-        figure.transform.SetParent(placementFigures);
-        figure.GetComponent<Renderer>().material.color = gradient.Evaluate(currentGradientStep);
-        currentGradientStep += 0.025f;
+        GameObject figure = Instantiate(cubePrefab, placementFigures, true);
 
-        if(currentGradientStep >= 0.95f)
+        ChangeColorOnMesh(figure.GetComponent<MeshFilter>().mesh, gradient.Evaluate(currentGradientStep), gradient.Evaluate(GradientStep += 0.1f));
+
+        if(GradientStep >= 1f)
         {
             gradient = null;
             gradient = ColorInterpolation.Instance.GetPalitre();
-            currentGradientStep = 0f;
+            GradientStep = 0f;
         }
 
         var index = cubes.Count - 1;
@@ -287,7 +285,7 @@ public class GameManager : SingletonGameobject<GameManager>
 
     private void CalculateStartPositions()
     {
-        Vector3 centerPosition = cubes[cubes.Count - 1].position;
+        Vector3 centerPosition = cubes[^1].position;
 
         Vector3 northPosition = new Vector3(centerPosition.x, currentYPosition, 5f);
         Vector3 southPosition = new Vector3(centerPosition.x, currentYPosition, -5f);
@@ -367,6 +365,23 @@ public class GameManager : SingletonGameobject<GameManager>
     {
         startFigure.position = Vector3.zero;
     }
+    
+    private void ChangeColorOnMesh(Mesh mesh, Color bottom, Color top)
+    {
+        var colors = new Color32[mesh.vertexCount];
 
+        for (var i = 0; i < mesh.vertexCount; i++)
+        {
+            if (mesh.vertices[i].y > 0)
+            {
+                colors[i] = top;
+            }
+            else
+            {
+                colors[i] = bottom;
+            }
+        }
 
+        mesh.colors32 = colors;
+    }
 }

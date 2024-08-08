@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class CalculateTransoftms : MonoBehaviour
+public class CalculateTransoftms
 {
     private Transform bottomFigure;
     private Transform upFigure;
@@ -13,14 +10,6 @@ public class CalculateTransoftms : MonoBehaviour
     //placement figure
     private float bottomEdgePosition = 0f;
     private float upEdgePosition = 0f;
-    private float newZ = 0f;
-    private float newX = 0f;
-
-    //falling figure
-    private float fallScaleZ = 0f;
-    private float fallScaleX = 0f;
-    private float newFallZ = 0f;
-    private float newFallX = 0f;
 
     private float zCovered = 0;
     private float xCovered = 0;
@@ -46,37 +35,26 @@ public class CalculateTransoftms : MonoBehaviour
         var zScaleUp = upFigure.localScale.z * 0.5f;
         var xScaleUp = upFigure.localScale.x * 0.5f;
 
-        float possibleZCover = zScaleBottom + zScaleUp - 0.1f;
-        float possibleXCover = xScaleBottom + xScaleUp - 0.1f;
+        var possibleZCover = zScaleBottom + zScaleUp - 0.1f;
+        var possibleXCover = xScaleBottom + xScaleUp - 0.1f;
 
         zCovered = Mathf.Abs(bottomFigure.position.z - upFigure.position.z);
         xCovered = Mathf.Abs(bottomFigure.position.x - upFigure.position.x);
 
-        bool isZAxisCover = zCovered < possibleZCover;
-        bool isXAxisCover = xCovered < possibleXCover;
+        var isZAxisCover = zCovered < possibleZCover;
+        var isXAxisCover = xCovered < possibleXCover;
 
-        if(!isZAxisCover || !isXAxisCover)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return !isZAxisCover || !isXAxisCover;
     }
 
     public bool IsPerfectPlacement()
     {
-        if(Mathf.Abs(zCovered) < 0.1f && Mathf.Abs(xCovered) < 0.1f)
-        {
-            return true;
-        }
-        return false;
+        return Mathf.Abs(zCovered) < 0.1f && Mathf.Abs(xCovered) < 0.1f;
     }
 
     public Transform CalculateZAxisPlacementPosition()
     {
-        float multiplicationFactor = 0f;
+        var multiplicationFactor = 0f;
 
         if (bottomFigure.position.z > upFigure.position.z)
         {
@@ -87,21 +65,26 @@ public class CalculateTransoftms : MonoBehaviour
             multiplicationFactor = -1f;
         }
 
-        upEdgePosition = upFigure.position.z + upFigure.localScale.z * 0.5f * multiplicationFactor; 
+        var position = upFigure.position;
+        var localScale = upFigure.localScale;
+        
+        upEdgePosition = position.z + localScale.z * 0.5f * multiplicationFactor; 
         bottomEdgePosition = bottomFigure.position.z - bottomFigure.localScale.z * 0.5f * multiplicationFactor; 
 
         zCovered = Mathf.Abs(upEdgePosition - bottomEdgePosition);
         
-        var pos = upFigure.position;
-        var scale = upFigure.localScale;
+        var pos = position;
+        var scale = localScale;
 
-        float scaleFallingFigure = scale.z;
+        var scaleFallingFigure = scale.z;
 
         pos.z = upEdgePosition - multiplicationFactor * zCovered * 0.5f;
-        upFigure.position = pos;
+        position = pos;
+        upFigure.position = position;
 
         scale.z = zCovered;
-        upFigure.localScale = scale;
+        localScale = scale;
+        upFigure.localScale = localScale;
 
         pos.z = bottomEdgePosition - multiplicationFactor * Mathf.Abs(scaleFallingFigure - zCovered) * 0.5f;
         fallingFigure.position = pos;
@@ -119,7 +102,7 @@ public class CalculateTransoftms : MonoBehaviour
 
     public Transform CalculateXAxisPlacementPositions()
     {
-        float multiplicationFactor = 0f;
+        var multiplicationFactor = 0f;
 
         if (bottomFigure.position.x > upFigure.position.x)
         {
@@ -138,7 +121,7 @@ public class CalculateTransoftms : MonoBehaviour
         var pos = upFigure.position;
         var scale = upFigure.localScale;
 
-        float scaleFallingFigure = scale.x;
+        var scaleFallingFigure = scale.x;
 
         pos.x = upEdgePosition - multiplicationFactor * xCovered * 0.5f;
         upFigure.position = pos;

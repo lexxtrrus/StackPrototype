@@ -7,11 +7,13 @@ public class GameBuilder : MonoBehaviour
     [MenuItem("Build/Build Android")]
     public static void PerformAndroidBuild()
     {
-        BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
-        buildPlayerOptions.scenes = new[] { "Assets/Scenes/Game.unity" };
-        buildPlayerOptions.locationPathName = "build/Android";
-        buildPlayerOptions.target = BuildTarget.Android;
-        buildPlayerOptions.options = BuildOptions.None;
+        var buildPlayerOptions = new BuildPlayerOptions
+        {
+            scenes = new[] { "Assets/Scenes/Game.unity" },
+            locationPathName = "build/Android.apk",
+            target = BuildTarget.Android,
+            options = BuildOptions.None
+        };
 
         BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
         BuildSummary summary = report.summary;
@@ -29,11 +31,13 @@ public class GameBuilder : MonoBehaviour
     [MenuItem("Build/Build WebGL")]
     public static void PerformWebGLBuild()
     {
-        BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
-        buildPlayerOptions.scenes = new[] { "Assets/Scenes/Game.unity" };
-        buildPlayerOptions.locationPathName = "build/WebGL";
-        buildPlayerOptions.target = BuildTarget.WebGL;
-        buildPlayerOptions.options = BuildOptions.None;
+        var buildPlayerOptions = new BuildPlayerOptions
+        {
+            scenes = new[] { "Assets/Scenes/Game.unity" },
+            locationPathName = "build/WebGL",
+            target = BuildTarget.WebGL,
+            options = BuildOptions.None
+        };
 
         BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
         BuildSummary summary = report.summary;

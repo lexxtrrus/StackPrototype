@@ -17,3 +17,9 @@ jobs:
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
           UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+
+      - name: Expose as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: ${{ steps.getManualLicenseFile.ouputs.filepath }}
+          path: ${{ steps.getManualLicenseFile.ouputs.filepath }}

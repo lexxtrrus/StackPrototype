@@ -40,7 +40,7 @@ jobs:
           lfs: true
       - uses: download-artifact@v3
         with:
-          name: build-WebGL
+          name: Build-WebGL
           path: build
       - run: ls -R
         working-directory: build/WebGL

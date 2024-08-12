@@ -7,6 +7,9 @@ jobs:
     name: Unity - Activate 🔑
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4.1.7    
+    
       - name: Request manual activation file
         id: getManualLicenseFile
         uses: game-ci/unity-activate@v2.0.0

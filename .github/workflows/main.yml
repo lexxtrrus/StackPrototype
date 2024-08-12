@@ -44,7 +44,7 @@ jobs:
           path: build
       - run: ls -R
         working-directory: build/WebGL
-      - uses: JamesIves/github-pages-deplot-action@4.1.4
+      - uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages
           folder: build/WebGL

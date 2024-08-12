@@ -42,11 +42,9 @@ jobs:
         with:
           name: build-WebGL
           path: build
-      - name: Display smth
-        run: ls -R
+      - run: ls -R
         working-directory: build/WebGL
-      - name: Deploy
-        uses: JamesIves/github-pages-deplot-action@4.1.4
+      - uses: JamesIves/github-pages-deplot-action@4.1.4
         with:
           branch: gh-pages
           folder: build/WebGL

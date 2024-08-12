@@ -10,6 +10,10 @@ jobs:
       - uses: actions/checkout@v2
 
       - uses: game-ci/unity-request-activation-file@v2
+        with:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         id: getManualLicenseFile
 
       - uses: actions/upload-artifact@v2

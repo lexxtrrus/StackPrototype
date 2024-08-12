@@ -10,8 +10,6 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-          - iOS # Build an iOS player.
-          - Android # Build an Android .apk standalone app.
           - WebGL # WebGL.
     steps:
       - uses: actions/checkout@v4
@@ -36,3 +34,19 @@ jobs:
         with:
           name: Build-${{ matrix.targetPlatform }}
           path: build/${{ matrix.targetPlatform }}
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+      - uses: download-artifact@v3
+        with:
+          name: build-WebGL
+          path: build
+      - name: Display smth
+        run: ls -R
+        working-directory: build/WebGL
+      - name: Deploy
+        uses: JamesIves/github-pages-deplot-action@4.1.4
+        with:
+          branch: gh-pages
+          folder: build/WebGL
